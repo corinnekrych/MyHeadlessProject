@@ -8,6 +8,7 @@ module.exports = function (config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-phantomjs-launcher'),
+      require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular/cli/plugins/karma')
@@ -40,28 +41,44 @@ module.exports = function (config) {
     autoWatch: true,
 
 
-    browsers: ['PhantomJS', 'PhantomJS_custom'],
+    // browsers: ['PhantomJS', 'PhantomJS_custom'],
 
-    // you can define custom flags
+    // // you can define custom flags
+    // customLaunchers: {
+    //   'PhantomJS_custom': {
+    //     base: 'PhantomJS',
+    //     options: {
+    //       windowName: 'my-window',
+    //       settings: {
+    //         webSecurityEnabled: false
+    //       },
+    //     },
+    //     flags: ['--load-images=true'],
+    //     debug: true
+    //   }
+    // },
+
+    // phantomjsLauncher: {
+    //   // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
+    //   exitOnResourceError: true
+    // },
+
+    browsers: ['ChromeNoSandboxHeadless'],
+
     customLaunchers: {
-      'PhantomJS_custom': {
-        base: 'PhantomJS',
-        options: {
-          windowName: 'my-window',
-          settings: {
-            webSecurityEnabled: false
-          },
-        },
-        flags: ['--load-images=true'],
-        debug: true
-      }
+      ChromeNoSandboxHeadless: {
+        base: 'ChromeCanary',
+        flags: [
+          '--no-sandbox',
+          // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+          '--headless',
+          '--disable-gpu',
+          // Without a remote debugging port, Google Chrome exits immediately.
+          ' --remote-debugging-port=9222',
+        ],
+      },
     },
 
-    phantomjsLauncher: {
-      // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
-      exitOnResourceError: true
-    },
-    //browsers: ['Chrome'],
     singleRun: true
   });
 };
